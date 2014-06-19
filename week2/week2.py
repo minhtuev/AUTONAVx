@@ -22,6 +22,10 @@ def get_transformational_matrix(x, y, theta):
     return M
     
 print get_rotational_matrix(90)
+print get_transformational_matrix(2, 3, 90)
 M1 = get_transformational_matrix(1, 2, 45)
 M2 = get_transformational_matrix(-4, 2, 45)
-print M1*M2
+print M1
+print M2
+# note: np.dot is different from *
+print np.dot(M1, M2)
