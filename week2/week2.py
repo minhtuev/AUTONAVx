@@ -1,6 +1,7 @@
 import numpy as np
 from math import cos, sin, radians
 
+# Code for week 2 exercises
 def get_rotational_matrix(theta):
     ''' Return the rotational matrix with angle theta in degrees'''
     theta = radians(theta)
