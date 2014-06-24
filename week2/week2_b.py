@@ -26,8 +26,3 @@ class UserCode:
         self.position[0] += navdata.vx*dt*cos(navdata.rotZ)
         self.position[1] += navdata.vx*dt*sin(navdata.rotZ)
         plot_trajectory("odometry", self.position)
-
-position = np.array([[0], [0]])
-position[0] = 1
-position[1] = 3
-print position
