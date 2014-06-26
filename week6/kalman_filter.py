@@ -2,6 +2,7 @@ import numpy as np
 from plot import plot_trajectory, plot_point, plot_covariance_2d
 from math import cos, sin
 
+# Assuming: phi = 0 and vphi = 0
 class UserCode:
     def __init__(self):
         dt = 0.005
@@ -64,6 +65,15 @@ class UserCode:
     def predictCovariance(self, A, sigma, Q):
         sigma_p = np.dot(np.dot(A, sigma), np.transpose(A))+Q
         return sigma_p
+        
+    def observationFunction(self, z, x_p):
+        return np.array([
+            [z[0] - x_p[0]],
+            [z[1] - x_p[1]],
+        ])
+
+    def observationFunction2(self, z, x_p, H):
+        return (z - np.dot(H, x_p))
     
     def calculateKalmanGain(self, sigma_p, H, R):
         k = np.dot(np.dot(sigma_p, np.transpose(H)), np.linalg.inv(np.dot(H, np.dot(sigma_p, np.transpose(H)))+R))
@@ -79,9 +89,7 @@ class UserCode:
         '''
         
         #TODO: Correct the current state prediction with the measurement
-        print k
-        print z
-        x = x_p + np.dot(k, z)
+        x = x_p + np.dot(k, self.observationFunction(z, x_p))
         return x
     
     def correctCovariance(self, sigma_p, k, H):
