@@ -1,4 +1,5 @@
 import math
+from math import cos, sin
 import numpy as np
 from plot import plot_trajectory, plot_point, plot_covariance_2d
         
@@ -112,7 +113,13 @@ class UserCode:
         :return corrected state as 3x1 vector
         '''
         
-        # TODO: implement correction of predicted state x_predicted
+        # x_predicted = x_predicted + \
+        # np.dot(K, x_predicted - z_predicted)
+
+        X = z - z_predicted
+        X[2] = self.normalizeYaw(X[2])
+        x_predicted = x_predicted + np.dot(K, X)
+        x_predicted[2] = self.normalizeYaw(x_predicted[2])
             
         return x_predicted
     
@@ -146,10 +153,22 @@ class UserCode:
         :param marker_yaw_world - orientation of the marker in world coordinates
         :return - 3x3 Jacobian matrix of the predictMeasurement(...) function
         '''
+
+        x_t = x[0]
+        y_t = x[1]
+        x_m = marker_position_world[0]
+        y_m = marker_position_world[1]
+        psi = x[2]
+
+        H = np.array([
+            [-cos(psi), -sin(psi), \
+            -sin(psi)*(x_m - x_t) + cos(psi)*(y_m - y_t)],
+            [sin(psi), -cos(psi), \
+            -cos(psi)*(x_m - x_t) - sin(psi)*(y_m - y_t)],
+            [0, 0, -1],
+        ])
         
-        # TODO: implement computation of H
-        
-        return np.zeros((3, 3))
+        return H
     
     def state_callback(self, t, dt, linear_velocity, yaw_velocity):
         '''
